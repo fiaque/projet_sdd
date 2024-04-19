@@ -2,6 +2,32 @@
 #include <stdlib.h>
 #include "Reseau.h"
 
+Noeud* creernoeud(double x, double y, int n){
+    //cette fonction crée un noeud numero n avec des coordonnées x et y
+    Noeud* new = malloc(sizeof (Noeud));
+    new->num=n;
+    new->x=x;
+    new->y=y;
+    new->voisins=NULL;
+    return new;
+}
+void majVoisins(Noeud *a, Noeud *b){
+    //cette fonction ajoute le noeud a(resp b) a la liste des voisins du noeud b(resp a)
+    CellNoeud * voisinA= a->voisins;
+    CellNoeud * voisinB= b->voisins;
+    CellNoeud * newA= malloc(sizeof(CellNoeud));
+    CellNoeud * newB= malloc(sizeof(CellNoeud));
+    newA->nd=b;
+    newA->suiv=voisinA;
+    newB->nd=a;
+    newB->suiv=voisinB;
+    a->voisins=newA;
+    b->voisins=newB;
+}
+
+
+
+/*
 Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y){
     CellNoeud  * n= R->noeuds;
     CellNoeud * npred=n;
@@ -30,6 +56,7 @@ Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y){
 
     return r;
 }
+ */
 
 Reseau* reconstitueReseauListe(Chaines *C){
     Reseau * r= (Reseau *) malloc (sizeof (Reseau));
