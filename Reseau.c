@@ -35,19 +35,32 @@ CellNoeud * ajouterNoeud(CellNoeud * cell, Noeud * n){
 
 }
 
-/*créer noeud liste omg:
- * Créer une fonction Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y);
-qui retourne un Noeud du réseau R correspondant au point (x, y) dans la liste chaı̂née noeuds de R.
-Noter que si ce point existe dans noeuds, la fonction retourne un nœud existant dans noeuds et que,
-dans le cas contraire, la fonction crée un nœud et l’ajoute dans la liste des nœuds du réseau de R. Le
-numéro d’un nouveau nœud est simplement choisi en prenant le nombre nbNoeuds+1 (just’avant de
-mettre à jour à la valeur nbNoeuds)*/
+Noeud * rechercherCellNoeud(CellNoeud * cell, double x, double y){
+    CellNoeud * parc=cell;
+    while(parc && parc->nd->x!=x && parc->nd->y!=y){
+        parc=parc->suiv;
+    }
+    Noeud * n = parc ? parc->nd : NULL;
+    return n;
+}
 
-Noeud * rechercheCreerNoeudListe(Reseau *R, double x, double y){
+
+Noeud * rechercheCreeNoeudListe(Reseau *R, double x, double y){
+    //on suppose ici que le réseau est bien alloué et que les champs gamma et nbnoeuds sont bien initialisés
+    if (R){
+        Noeud * existe= rechercherCellNoeud(R->noeuds,x,y);
+        if (!existe){ //si le noeud n'existait pas on le crée et on l'ajoute
+            R->nbNoeuds++;
+            existe= creernoeud(x,y,R->nbNoeuds);
+            ajouterNoeud(R->noeuds,existe);
+        }
+        return existe;
+    }
+    return NULL;
 
 }
 
-/*
+/* version de la fonction sans fonctions auxiliaires(terrible) (faut pas)
 Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y){
     CellNoeud  * n= R->noeuds;
     CellNoeud * npred=n;
@@ -78,7 +91,7 @@ Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y){
 }
  */
 
-Reseau* reconstitueReseauListe(Chaines *C){
+/*Reseau* reconstitueReseauListe(Chaines *C){
     Reseau * r= (Reseau *) malloc (sizeof (Reseau));
     r->gamma= C->gamma;
     r->nbNoeuds=0;
@@ -115,6 +128,11 @@ Reseau* reconstitueReseauListe(Chaines *C){
         cell=cell->suiv;
     }
     return r;
+}
+*/
+
+Reseau* reconstitueReseauListe(Chaines *C){
+    
 }
 int nbLiaisons(Reseau *R){
     CellNoeud * traite, *voisin, *tmp;
