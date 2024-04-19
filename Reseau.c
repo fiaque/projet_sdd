@@ -25,7 +25,27 @@ void majVoisins(Noeud *a, Noeud *b){
     b->voisins=newB;
 }
 
+CellNoeud * ajouterNoeud(CellNoeud * cell, Noeud * n){
+    CellNoeud * new= malloc(sizeof(CellNoeud));
+    CellNoeud * tmp= cell;
+    new->nd=n;
+    new->suiv=tmp;
+    cell=new;
+    return cell;
 
+}
+
+/*créer noeud liste omg:
+ * Créer une fonction Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y);
+qui retourne un Noeud du réseau R correspondant au point (x, y) dans la liste chaı̂née noeuds de R.
+Noter que si ce point existe dans noeuds, la fonction retourne un nœud existant dans noeuds et que,
+dans le cas contraire, la fonction crée un nœud et l’ajoute dans la liste des nœuds du réseau de R. Le
+numéro d’un nouveau nœud est simplement choisi en prenant le nombre nbNoeuds+1 (just’avant de
+mettre à jour à la valeur nbNoeuds)*/
+
+Noeud * rechercheCreerNoeudListe(Reseau *R, double x, double y){
+
+}
 
 /*
 Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y){
