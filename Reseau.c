@@ -1,0 +1,136 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "Reseau.h"
+
+Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y){
+    CellNoeud  * n= R->noeuds;
+    CellNoeud * npred=n;
+    Noeud * r=NULL;
+    CellNoeud * tmp;
+    while(n){
+        if(n->nd->x==x && n->nd->y==y){
+            r=n->nd;
+            break;
+        }
+        npred=n;
+        n=n-> suiv;
+    }
+
+    if(!npred){
+        npred=malloc(sizeof(CellNoeud));
+        r=malloc(sizeof(Noeud));
+        r->x=x;
+        r->y=y;
+        r->num= R->nbNoeuds+1;
+        R->nbNoeuds++;
+        tmp=npred;
+        npred->nd=r;
+        npred->suiv=tmp;
+    }
+
+    return r;
+}
+
+Reseau* reconstitueReseauListe(Chaines *C){
+    Reseau * r= (Reseau *) malloc (sizeof (Reseau));
+    r->gamma= C->gamma;
+    r->nbNoeuds=0;
+    r->noeuds=NULL;
+    r->commodites=NULL;
+    CellCommodite * tmpc;
+    CellChaine * cell =C->chaines;
+    CellPoint * p, *pred;
+    CellNoeud * tmp;
+    Noeud * n, * npred=NULL ;
+    while(cell){
+        p=cell->points;
+        tmpc=r->commodites;
+        r->commodites= malloc(sizeof(CellCommodite));
+        r->commodites->extrA= rechercheCreeNoeudListe(r,p->x,p->y);
+        while(p){
+            n=rechercheCreeNoeudListe(r,p->x,p->y);
+            if (pred){ //mise a jour des voisins
+                npred = rechercheCreeNoeudListe(r, pred->x, pred->y);
+                tmp=n->voisins;
+                n->voisins=malloc(sizeof (CellNoeud));
+                n->voisins->nd= npred;
+                n->voisins->suiv=tmp;
+                tmp= npred->voisins;
+                npred->voisins=malloc(sizeof (CellNoeud));
+                npred->voisins->nd= n;
+                npred->voisins->suiv=tmp;
+            }
+            pred=p;
+            p=p->suiv;
+        }
+        r->commodites->extrB= rechercheCreeNoeudListe(r,pred->x,pred->y);
+        r->commodites->suiv=tmpc;
+        cell=cell->suiv;
+    }
+    return r;
+}
+int nbLiaisons(Reseau *R){
+    CellNoeud * traite, *voisin, *tmp;
+    CellNoeud * traiteInit=NULL;
+    CellNoeud * noeud= R->noeuds;
+    int res=0;
+    // on se place dans le premier noeud, on compte toutes ses liaisons et on ajoute le premier noeud dans la liste traite
+    while (noeud){
+        voisin=noeud->nd->voisins;
+        tmp=traiteInit;
+        traiteInit=malloc(sizeof(CellNoeud));
+        traiteInit->nd=noeud->nd;
+        traiteInit->suiv=tmp;
+        traite=traiteInit;
+        while(voisin){
+            //ici on vérifie que dans la liste des voisins on n'a pas de neouds déja traités
+            while(traite &&!(voisin->nd->x==traite->nd->x && traite->nd->y==traite->nd->y )){
+                traite=traite->suiv;
+            }
+            if(!traite){
+                res++;
+            }
+            voisin=voisin->suiv;
+        }
+        noeud=noeud->suiv;
+
+    }
+    return res;
+}
+void libererVoisins(Noeud * nd){
+    CellNoeud * voisin= nd->voisins;
+    CellNoeud * tmp;
+    while(voisin){
+        tmp=voisin->suiv;
+        voisin=voisin->suiv;
+        free(tmp);
+    }
+    free(voisin);
+}
+
+void libererCellNoeud(CellNoeud * n){
+    CellNoeud * tmp;
+    while (n){
+        tmp=n;
+        n=n->suiv;
+        libererVoisins(tmp->nd);
+        free(tmp->nd);
+    }
+}
+void libererCommodites(CellCommodite * c){
+    CellCommodite * tmp;
+    while (c){
+        tmp = c;
+        c=c->suiv;
+        free(c->extrA);
+        free(c->extrB);
+        free(tmp);
+
+    }
+    free(c);
+}
+void libererReseau(Reseau * r){
+  libererCommodites(r->commodites);
+   libererCellNoeud(r->noeuds);
+    free(r);
+}
