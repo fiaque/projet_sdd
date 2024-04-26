@@ -43,5 +43,9 @@ void ecrireReseau(Reseau *R, FILE *f);
 int nbLiaisons(Reseau *R);
 int nbCommodites(Reseau *R);
 void afficheReseauSVG(Reseau *R, char* nomInstance);
+void libererVoisins(Noeud * nd);
+void libererCellNoeud(CellNoeud * n);
+void libererCommodites(CellCommodite * c);
+void libererReseau(Reseau * r);
 #endif
 

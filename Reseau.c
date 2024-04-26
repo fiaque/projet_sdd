@@ -30,9 +30,7 @@ CellNoeud * ajouterNoeud(CellNoeud * cell, Noeud * n){
     CellNoeud * tmp= cell;
     new->nd=n;
     new->suiv=tmp;
-    cell=new;
-    return cell;
-
+    return new;
 }
 
 Noeud * rechercherCellNoeud(CellNoeud * cell, double x, double y){
@@ -57,7 +55,6 @@ Noeud * rechercheCreeNoeudListe(Reseau *R, double x, double y){
         return existe;
     }
     return NULL;
-
 }
 
 /* version de la fonction sans fonctions auxiliaires(terrible) (faut pas)
@@ -130,9 +127,66 @@ Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y){
     return r;
 }
 */
+CellCommodite * creerCommodite(Noeud* a,Noeud* b){
+    CellCommodite * c= malloc(sizeof(CellCommodite));
+    c->extrA=a;
+    c->extrB=b;
+    return c;
+}
+CellCommodite * ajouterCommodite(CellCommodite* liste, Noeud* a, Noeud* b){
+    CellCommodite * tmp= liste;
+    CellCommodite * new= creerCommodite(a,b);
+    new->suiv=tmp;
+    return new;
+}
+/*On utilise un ensemble de nœuds V qui est initialisé vide: V ← ∅
+On parcourt une à une chaque chaıne:
+Pour chaque point p de la chaıne:
+Si p 6∈ V (on teste si le point n’a pas déjà été rencontré auparavant)
+On ajoute dans V un nœud correspond au point p.
+On met à jour la liste des voisins de p et celles de ses voisins.
+On conserve la commodité de la chaıne.*/
 
 Reseau* reconstitueReseauListe(Chaines *C){
-    
+    if (!C){
+        fprintf(stderr, "pointeur invalide");
+        EXIT_FAILURE;
+    }
+    Reseau * R= malloc(sizeof(Reseau));
+    R->nbNoeuds=0;
+    R->gamma=C->gamma;
+    R->noeuds=NULL;
+    R->commodites=NULL;
+    CellChaine* cell= C->chaines;
+    while (cell){
+        CellPoint * point= cell->points;
+        Noeud * first= creernoeud(point->x,point->y,1);
+        R->noeuds=ajouterNoeud(R->noeuds,first);
+        Noeud * precedent=first;
+        point=point->suiv;
+        while (point){
+            Noeud * existe= rechercherCellNoeud(R->noeuds, point->x, point->y);
+            if (existe==NULL){
+                R->nbNoeuds++;
+                existe= creernoeud(point->x,point->y, R->nbNoeuds);
+                ajouterNoeud(R->noeuds,existe);
+
+
+            }
+            majVoisins(existe,precedent);
+            precedent=existe;
+            point=point->suiv;
+
+        }
+        R->commodites=ajouterCommodite(R->commodites,first,precedent);
+        cell=cell->suiv;
+    }
+    return R;
+    //on a une liste de listes chainées
+    //Il faut se mettre dans la grande liste, la parcourir et dans chaque parcours de la petite liste on garde le premier et dernier element
+    //pour ajouter les noeuds on utilise recherche noeud et ajouter noeud, et pour mettre à jour on utilise la fonction majvoisins
+
+
 }
 int nbLiaisons(Reseau *R){
     CellNoeud * traite, *voisin, *tmp;
@@ -199,3 +253,4 @@ void libererReseau(Reseau * r){
    libererCellNoeud(r->noeuds);
     free(r);
 }
+
