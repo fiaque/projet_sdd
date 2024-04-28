@@ -31,21 +31,21 @@ typedef struct {
     CellCommodite *commodites;      /* Liste des commodites a relier */
 } Reseau;
 
-
-
-Noeud* creernoeud(double x, double y, int n);
-void majVoisins(Noeud *a, Noeud *b);
-CellNoeud * ajouterNoeud(CellNoeud * cell, Noeud * n);
-Noeud * rechercherCellNoeud(CellNoeud * cell, double x, double y);
+Reseau * creerReseau(int gamma);
+Noeud * creerNoeud(double x, double y, int n);
+CellNoeud * creerCellNoeud(Noeud * nd);
+CellNoeud* ajouterNoeud(CellNoeud *cell, Noeud * newnd);
 Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y);
 Reseau* reconstitueReseauListe(Chaines *C);
-void ecrireReseau(Reseau *R, FILE *f);
-int nbLiaisons(Reseau *R);
-int nbCommodites(Reseau *R);
-void afficheReseauSVG(Reseau *R, char* nomInstance);
-void libererVoisins(Noeud * nd);
-void libererCellNoeud(CellNoeud * n);
-void libererCommodites(CellCommodite * c);
-void libererReseau(Reseau * r);
+int nbCommodites(Reseau * R);
+int existeNoeud(CellNoeud * cell, CellNoeud * noeud);
+int nbLiaisons(Reseau * R);
+void libererNoeud(Noeud *n);
+void libererCellNoeud(CellNoeud *cn);
+void libererCellComodite(CellCommodite *cc);
+void libererReseau(Reseau *r);
+
+
+
 #endif
 

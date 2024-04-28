@@ -3,7 +3,14 @@
 #include <string.h>
 #include "Reseau.h"
 
-int main(int argc, char ** argv){
+int main(int argc, char ** argv) {
+    /* tests pour les fonctions creerReseau, RechercheCreerNoeudListe et ajouterCommodite
+    Reseau * R= creerReseau(5);
+    Noeud * nd;
+    for (int j=0;j<6;j++){
+        nd=rechercheCreeNoeudListe(R,j,j);
+    }*/
+
     printf("debut\n");
     if (argc != 3) {
         printf("Utilisation : ./prog <Nom d'un fichier> <option>\n");
@@ -25,11 +32,13 @@ int main(int argc, char ** argv){
 
         Reseau * r= reconstitueReseauListe(c);
         printf("La reconstitution du réseau est terminée :)\n");
-        printf("Il y a %d liaisons dans ce réseau\n", nbLiaisons(r));
+        printf("Le reseau contient %d liaisons\n", nbLiaisons(r));
+        printf("Le reseau contient %d commodites\n", nbCommodites(r));
+
+
         libererChaine(c);
         free(new_name);
-
+        libererReseau(r);
     }
 
-    return 1;
 }
