@@ -3,7 +3,7 @@ CFLAGS = -Wall -g -lm
 
 SRC = Chaine.c MainChaine.c SVGwriter.c Reseau.c
 OBJS = ${SRC:.c=.o}
-SRC_RES= Reseau.c ReconstitueReseau.c Chaine.c SVGwriter.c
+SRC_RES= Reseau.c ReconstitueReseau.c Chaine.c SVGwriter.c Hachage.c ArbreQuat.c
 OBJS_RES = ${SRC_RES:.c=.o}
 
 

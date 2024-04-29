@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Reseau.h"
+#include "Hachage.h"
+#include "ArbreQuat.h"
 
 int main(int argc, char ** argv) {
     /* tests pour les fonctions creerReseau, RechercheCreerNoeudListe et ajouterCommodite
@@ -10,7 +12,7 @@ int main(int argc, char ** argv) {
     for (int j=0;j<6;j++){
         nd=rechercheCreeNoeudListe(R,j,j);
     }*/
-
+    /*
     printf("debut\n");
     if (argc != 3) {
         printf("Utilisation : ./prog <Nom d'un fichier> <option>\n");
@@ -39,6 +41,16 @@ int main(int argc, char ** argv) {
         libererChaine(c);
         free(new_name);
         libererReseau(r);
+    }*/
+
+    //test de la fonction clé:
+    for (int i=0;i<=10;i++){
+        for (int j=0; j<=10; j++){
+            printf("i=%d et j=%d ===> la clé= %f\n", i,j,cle((double)i,(double)j));
+        }
     }
+    //on n'a pas/peu de collisions notables.
+    return 1;
+
 
 }

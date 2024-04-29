@@ -108,7 +108,6 @@ void ecrireChaines(Chaines *C, FILE *f) {
 
 }
 void afficheChainesSVG(Chaines *C, char* nomInstance){
-    int i;
     double maxx=0,maxy=0,minx=1e6,miny=1e6;
     CellChaine *ccour;
     CellPoint *pcour;

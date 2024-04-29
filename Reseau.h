@@ -44,6 +44,8 @@ void libererNoeud(Noeud *n);
 void libererCellNoeud(CellNoeud *cn);
 void libererCellComodite(CellCommodite *cc);
 void libererReseau(Reseau *r);
+int estVoisin(Noeud * noeud, CellNoeud * voisins);
+void ajouterVoisin(Noeud* n, Noeud* voisin);
 
 
 

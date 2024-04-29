@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include "Reseau.h"
 #include "Chaine.h"
-#include "Hachage.h"
-#include <math.h>
 #include "SVGwriter.h"
 
 Reseau * creerReseau(int gamma) {
@@ -73,7 +71,15 @@ Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y){
     return new_noeud;
 
 }
-
+int estVoisin(Noeud * noeud, CellNoeud * voisins){
+    while(voisins){
+        if (voisins->nd->x==noeud->x && voisins->nd->y==noeud->y){
+            return 1;
+        }
+        voisins=voisins->suiv;
+    }
+    return 0;
+}
 void ajouterVoisin(Noeud* n, Noeud* voisin){
     CellNoeud * v=n->voisins;
     while(v){
@@ -88,7 +94,6 @@ void ajouterVoisin(Noeud* n, Noeud* voisin){
 Reseau* reconstitueReseauListe(Chaines *C){
     Reseau * R= creerReseau(C->gamma);
     CellChaine * cc= C->chaines;
-    CellPoint * cp= C->chaines->points;
     Noeud * nd;
     Noeud * first;
     Noeud * prec;
