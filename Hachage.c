@@ -17,69 +17,53 @@ int h(double k, int M){
     return (floor(M*(k*A-floor(k*A))));
 }
 
-Noeud* rechercheCreeNoeudHachage(Reseau* R, TableHachage* H, double x, double y){
+Noeud* rechercheCreeNoeudHachage(Reseau* R, TableHachage* H, double x, double y) {
 
     /*CALCUL DE L'INDICE DE LA TABLE DE HASHAGE*/
-    double c=cle(x,y);
-    int indice=h(c, H->tailleMax);
+    double c = cle(x, y);
+    int indice = h(c, H->tailleMax);
 
     /*RECUPERATION DE LA CASE CORRESPONDANTE*/
-    CellNoeud *currcellnoeud=H->T[indice];
+    CellNoeud *currcellnoeud = H->T[indice];
     Noeud *noeud;
 
     /*CAS OU LA CASE EST VIDE*/
-    if(currcellnoeud==NULL){
+    if (currcellnoeud == NULL) {
+        R->nbNoeuds++;
+        Noeud *new = creerNoeud(x, y, R->nbNoeuds);
+        ajouterNoeud(R->noeuds, new);
 
-        noeud=rechercheCreeNoeudListe(R, x, y); // On utilise rechercheCreeNoeudListe de Reseau.c pour créer le noeud 
+        CellNoeud *cellnoeud = (CellNoeud *) malloc(sizeof(CellNoeud));
+        cellnoeud->nd = noeud;
+        cellnoeud->suiv = NULL;
 
-        /*CREATTION DE LA CASE POUR TABLE*/
-        CellNoeud *cellnoeud=(CellNoeud*)malloc(sizeof(CellNoeud));
-        cellnoeud->nd=noeud; 
-        cellnoeud->suiv=NULL;
-
-        /*AFFECTATION DE LA CASE DANS LA TABLE*/
-        H->T[indice]=cellnoeud;
+        //on ajoute la case dans la table
+        H->T[indice] = cellnoeud;
         H->nbElement++;
 
         return noeud; // On retourne le nouveau noeud
     }
 
-    /*CAS OU LA CASE N'EST PAS VIDE*/
-    noeud=currcellnoeud->nd; // On récupère le noeud en tête de liste
-
-    /*ON TEST POUR LE PREMIER NOEUD*/
-    if (fabs(noeud->x - x)<0.001 && fabs(noeud->y - y)<0.001){ // On test l'egalite des coordonnees (double) avec la fabs (qui retourne la valeur absolue d'un double) et un epsilone à 0.001
-            
-            /*CAS OU LE PREMIER NOEUD EST CELUI QU'ON CHERCHE*/
-            return noeud; // On quitte la fonction en revoyant le premier noeud
-        } 
-
-    /*ON TEST POUR LE RESTE DES NOEUDS DE LA CASE*/
-    while(currcellnoeud->suiv){
-
-        noeud=currcellnoeud->suiv->nd; // On récupère le noeud suivant
-
-        if(fabs(noeud->x - x)<0.001 && fabs(noeud->y - y)<0.001){ // On test l'egalite des coordonnees
-
-            return noeud;// On quitte la fonction en revoyant le noeud s'il s'agit de celui qu'on cherche
+    //cas ou la case n'est pas vide, on parcourt la liste chainee, si on trouve le noeud on le retourne, sinon on l'ajoute a la fin de la liste
+    CellNoeud *precCellnoeud = NULL;
+    while (currcellnoeud) {
+        if (currcellnoeud->nd->x == x && currcellnoeud->nd->y) {
+            return currcellnoeud->nd;
         }
-
-        currcellnoeud=currcellnoeud->suiv; // On passe au noeud suivant
+        precCellnoeud = currcellnoeud;
+        currcellnoeud = currcellnoeud->suiv;
     }
 
-    /*LE NOEUD RECHERCHE N'EST PAS DANS LA TABLE*/
-    noeud=rechercheCreeNoeudListe(R, x, y); // On utilise rechercheCreeNoeudListe de Reseau.c pour créer le noeud 
-
-    /*CREATION DU CELLNOEUD SUIVANT A PARTIR DU NOUVEAU NOEUD*/
-    CellNoeud *cellnoeud=(CellNoeud*)malloc(sizeof(CellNoeud));
-    cellnoeud->nd=noeud; 
-    cellnoeud->suiv=NULL;
-
-    /*AFFECTATION DU NOUVEAU NOEUD EN FIN DE CHAINE*/
-    currcellnoeud->suiv=cellnoeud;
+    //si on est arrivé a la fin de la boucle alors le noeud n'exsite pas
+    Noeud *new = creerNoeud(x, y, ++R->nbNoeuds);
+    ajouterNoeud(R->noeuds, new);
+    CellNoeud *cellnoeud = (CellNoeud *) malloc(sizeof(CellNoeud));
+    cellnoeud->nd = noeud;
+    cellnoeud->suiv = NULL;
+    precCellnoeud->suiv = cellnoeud;
     H->nbElement++;
+    return new;
 
-    return noeud; // On retourne le nouveau noeud
 }
 
 Reseau* reconstitueReseauHachage(Chaines *C, int M){
@@ -88,27 +72,14 @@ Reseau* reconstitueReseauHachage(Chaines *C, int M){
     H->nbElement=0;
     H->tailleMax=M;
     H->T=(CellNoeud**)malloc(M*sizeof(CellNoeud*));
+    if(!H->T){
+        fprintf(stderr,"allocation de H->T a échoué");
+        exit(EXIT_FAILURE);
+    }
     for(int i=0;i<M;i++){
         H->T[i]=(CellNoeud*)malloc(sizeof(CellNoeud*));
         H->T[i]=NULL;
     }
-
-    /*Reseau *R=(Reseau*)malloc(sizeof(Reseau));
-    R->gamma=C->gamma;
-    R->nbNoeuds=0;
-    R->noeuds=NULL;*/
-
-    /*INITIALISATION DES POINTEURS DE PARCOURS ET VARIABLES D'INSTANCIATIONS*/
-    /*CellPoint *cellPoint; //Pointeur de parcours de la liste chainee des Points
-    CellChaine *cellChaine=C->chaines; //Récuperation de la première chaine
-
-    Noeud *noeud; // Pour les nouveaux noeuds
-    Noeud *noeudprec=NULL;
-
-    CellCommodite *currcellcommodite=NULL; // Pour les nouvelles Commodites
-    CellCommodite *cellcommodite;
-    Noeud *extrA; // Pour les noeuds des nouvelles Commodites
-    Noeud *extrB;*/
 
     Reseau * R= creerReseau(C->gamma);
     CellChaine * cc= C->chaines;
@@ -132,8 +103,4 @@ Reseau* reconstitueReseauHachage(Chaines *C, int M){
         cc=cc->suiv;
     }
     return R;
-}
-
-void libererTableHash(TableHachage * T){
-
 }

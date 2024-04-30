@@ -31,5 +31,6 @@ int comptePointsTotal(Chaines *C);
 void libererChaine( Chaines * c);
 void libererCell(CellChaine * cell);
 void libererPoints(CellPoint * p);
+Chaines * generationAleatoire(int nbChaines,int nbPointsChaine,int xmax ,int ymax);
 
 #endif	

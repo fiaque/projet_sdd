@@ -15,6 +15,7 @@ int main(int argc, char ** argv) {
 
 
     printf("debut\n");
+    printf("%f\n",(float)rand()/(float)(RAND_MAX/10));
     if (argc != 3) {
         printf("Utilisation : ./prog <Nom d'un fichier> <option>\n");
         exit(EXIT_FAILURE);

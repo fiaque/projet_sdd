@@ -207,3 +207,33 @@ int comptePointsTotal(Chaines *C){
     libererPoints(alrseen);
     return res;
 }
+Chaines * generationAleatoire(int nbChaines,int nbPointsChaine,int xmax ,int ymax){
+    Chaines *c = malloc(sizeof(Chaines));
+    c->gamma= rand()/(RAND_MAX/10);
+    c->nbChaines=nbChaines;
+    c->chaines = NULL;
+    CellChaine *cell;
+    CellChaine *tmpc;
+    int i,j;
+
+    for (i = 0; i < c->nbChaines; i++) { //on crée nbChaines chaines
+        cell = malloc(sizeof (CellChaine));
+        cell->numero=i;
+        cell->points = NULL;
+        CellPoint *tmp;
+        for (j = 0; j < nbPointsChaine; j++) {
+            CellPoint *p = (CellPoint *) malloc(sizeof(CellPoint));
+            tmp = cell->points;
+            p->x=(float)rand()/(float)(RAND_MAX/xmax);
+            p->y=(float)rand()/(float)(RAND_MAX/ymax);
+            cell->points = p;
+            p->suiv = tmp;
+        }
+        tmpc = c->chaines;
+        c->chaines=cell;
+        cell->suiv=tmpc;
+
+
+    }
+    return c;
+}

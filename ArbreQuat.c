@@ -264,7 +264,7 @@ Reseau *reconstitueReseauArbre(Chaines *C) {
 
         cellC = cellC->suiv;
     }
-    libererArbre(arbre);
+    //libererArbre(arbre);
     return R;
 }
 

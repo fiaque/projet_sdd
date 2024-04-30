@@ -1,4 +1,4 @@
-NbNoeuds: 12
+NbNoeuds: 13
 NbLiaisons: 15
 NbCommodites: 8
 Gamma: 3
@@ -32,11 +32,11 @@ l 3 4
 l 2 3
 l 1 2
 
-k 5 6
-k 2 1
-k 11 12
-k 11 10
-k 8 10
-k 7 5
-k 4 5
-k 1 2
+k 1 3
+k 4 6
+k 7 6
+k 8 3
+k 11 1
+k 11 8
+k 2 6
+k 5 11
