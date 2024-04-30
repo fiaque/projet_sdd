@@ -93,59 +93,47 @@ Reseau* reconstitueReseauHachage(Chaines *C, int M){
         H->T[i]=NULL;
     }
 
-    Reseau *R=(Reseau*)malloc(sizeof(Reseau));
+    /*Reseau *R=(Reseau*)malloc(sizeof(Reseau));
     R->gamma=C->gamma;
     R->nbNoeuds=0;
-    R->noeuds=NULL;
+    R->noeuds=NULL;*/
 
     /*INITIALISATION DES POINTEURS DE PARCOURS ET VARIABLES D'INSTANCIATIONS*/
-    CellPoint *cellPoint; //Pointeur de parcours de la liste chainee des Points
+    /*CellPoint *cellPoint; //Pointeur de parcours de la liste chainee des Points
     CellChaine *cellChaine=C->chaines; //Récuperation de la première chaine
 
     Noeud *noeud; // Pour les nouveaux noeuds
-    Noeud *noeudprec=NULL; 
+    Noeud *noeudprec=NULL;
 
     CellCommodite *currcellcommodite=NULL; // Pour les nouvelles Commodites
     CellCommodite *cellcommodite;
     Noeud *extrA; // Pour les noeuds des nouvelles Commodites
-    Noeud *extrB;
+    Noeud *extrB;*/
 
-    /*PARCOURS DES CHAINES*/
-    while(cellChaine){ 
+    Reseau * R= creerReseau(C->gamma);
+    CellChaine * cc= C->chaines;
+    Noeud * nd;
+    Noeud * first;
+    Noeud * prec;
+    while (cc){
+        nd= rechercheCreeNoeudHachage(R,H,cc->points->x,cc->points->y);
+        first=nd;
+        prec=nd;
+        cc->points=cc->points->suiv;
+        while (cc->points){
+            prec=nd;
+            nd= rechercheCreeNoeudHachage(R,H, cc->points->x,cc->points->y);
+            ajouterVoisin(nd, prec);
+            ajouterVoisin(prec, nd);
+            cc->points=cc->points->suiv;
 
-        cellPoint=cellChaine->points; // On recupere la tete de liste
-
-        extrA=rechercheCreeNoeudHachage(R, H, cellPoint->x, cellPoint->y); // On recupere la premier extremite a partir du premier point
-
-        /*PARCOURS D'UNE CHAINE*/
-        while(cellPoint){
-
-            noeud=rechercheCreeNoeudHachage(R, H, cellPoint->x, cellPoint->y);
-
-            /*MISE A JOUR DES VOISINS*/
-            ajouterVoisin(noeud, noeudprec);
-            ajouterVoisin(noeudprec,noeud);
-
-            noeudprec=noeud; // On garde le noeud precedent pour pouvoir mettre a jour les voisins
-
-            cellPoint=cellPoint->suiv; // On passe au point suivant
         }
-
-        extrB=noeud; // On recupere la deuxieme extremite a partir du noeud (qui contient le dernier element de la chaine apres  la boucle)
-
-        /*AJOUT DE LA NOUVELLE COMMODITE EN TETE DE LISTE LISTE*/
-        cellcommodite=(CellCommodite*)malloc(sizeof(CellCommodite)); // Allocation de la memoire pour la nouvelle commodite
-        cellcommodite->extrA=extrA; // Affectation des extremites
-        cellcommodite->extrB=extrB;
-        cellcommodite->suiv=currcellcommodite; // On met en tete la nouvelle Commodite
-        currcellcommodite=cellcommodite; // On met a jour la liste
-
-        noeudprec=NULL; // On remet le pointeur a NULL pour eviter de rajouter des voisins
-
-        cellChaine=cellChaine->suiv; // On passe a la chaine suivan
+        R->commodites= ajouterCommodite(R->commodites,first,prec);
+        cc=cc->suiv;
     }
-
-    R->commodites=currcellcommodite; // On affecte la liste des commodite au Reseau
-
     return R;
+}
+
+void libererTableHash(TableHachage * T){
+
 }

@@ -46,6 +46,10 @@ void libererCellComodite(CellCommodite *cc);
 void libererReseau(Reseau *r);
 int estVoisin(Noeud * noeud, CellNoeud * voisins);
 void ajouterVoisin(Noeud* n, Noeud* voisin);
+CellCommodite * ajouterCommodite(CellCommodite * cell, Noeud * a, Noeud * b);
+void ecrireReseau(Reseau *R, FILE *f);
+char * changerExt(char * old, char * newext);
+void afficheReseauSVG(Reseau *R, char* nomInstance);
 
 
 

@@ -264,5 +264,19 @@ Reseau *reconstitueReseauArbre(Chaines *C) {
 
         cellC = cellC->suiv;
     }
+    libererArbre(arbre);
     return R;
+}
+
+void libererArbre(ArbreQuat * a){
+    if(a) {
+        if ((!a->ne) && (!a->no) && (!a->se) && (!a->so)) {
+            free(a);
+        } else {
+            libererArbre(a->ne);
+            libererArbre(a->no);
+            libererArbre(a->ne);
+            libererArbre(a->so);
+        }
+    }
 }

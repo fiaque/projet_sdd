@@ -31,7 +31,7 @@ int main(int argc, char** argv){
     fclose(f2);
     printf("L'écriture du fichier %s est finie\n", new_name);
     free(new_name);
-    afficheChainesSVG(c,"00014burma");
+    afficheChainesSVG(c,old);
 
     printf("La longeur de la chaine 00014burma est %lf\n", longueurTotale(c));
     printf("Le nombre de points dans cette chaine est %d\n", comptePointsTotal(c));

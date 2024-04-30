@@ -3,6 +3,18 @@
 #include "Reseau.h"
 #include "Chaine.h"
 #include "SVGwriter.h"
+#include <string.h>
+
+char * changerExt(char * old, char * newext){
+    /* allouer la taille de strtok + ext puis concatener*/
+    char * oldn=strdup(old);
+    char * new=malloc(strlen(strtok(oldn,"."))+strlen(newext)+1*sizeof(char));
+    strcpy(new,strtok(oldn,"."));
+    strcat(new,newext);
+    free(oldn);
+    return new;
+}
+
 
 Reseau * creerReseau(int gamma) {
     Reseau *R = malloc(sizeof(Reseau));
@@ -94,20 +106,22 @@ void ajouterVoisin(Noeud* n, Noeud* voisin){
 Reseau* reconstitueReseauListe(Chaines *C){
     Reseau * R= creerReseau(C->gamma);
     CellChaine * cc= C->chaines;
+    CellPoint * cp;
     Noeud * nd;
     Noeud * first;
     Noeud * prec;
     while (cc){
-        nd= rechercheCreeNoeudListe(R,cc->points->x,cc->points->y);
+        cp = cc->points;
+        nd= rechercheCreeNoeudListe(R,cp->x,cp->y);
         first=nd;
         prec=nd;
-        cc->points=cc->points->suiv;
-        while (cc->points){
+        cp=cp->suiv;
+        while (cp){
             prec=nd;
-            nd= rechercheCreeNoeudListe(R, cc->points->x,cc->points->y);
+            nd= rechercheCreeNoeudListe(R, cp->x,cp->y);
             ajouterVoisin(nd, prec);
             ajouterVoisin(prec, nd);
-            cc->points=cc->points->suiv;
+            cp=cp->suiv;
 
         }
         R->commodites= ajouterCommodite(R->commodites,first,prec);
