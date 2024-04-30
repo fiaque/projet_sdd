@@ -25,4 +25,4 @@ comp: ${OBJS_B}
 
 
 clean:
-	rm -f *.o res cha
+	rm -f *.o  *.html res cha

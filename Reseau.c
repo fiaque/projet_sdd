@@ -93,14 +93,16 @@ int estVoisin(Noeud * noeud, CellNoeud * voisins){
     return 0;
 }
 void ajouterVoisin(Noeud* n, Noeud* voisin){
-    CellNoeud * v=n->voisins;
-    while(v){
-        if (v->nd->x==voisin->x && v->nd->y==voisin->y){
-            return ;
+    if (voisin && n){
+        CellNoeud * v=n->voisins;
+        while(v){
+            if (v->nd->x==voisin->x && v->nd->y==voisin->y){
+                return ;
+            }
+            v=v->suiv;
         }
-        v=v->suiv;
+        n->voisins= ajouterNoeud(n->voisins, voisin);
     }
-    n->voisins= ajouterNoeud(n->voisins, voisin);
 }
 
 Reseau* reconstitueReseauListe(Chaines *C){

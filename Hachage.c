@@ -28,7 +28,7 @@ Noeud* rechercheCreeNoeudHachage(Reseau* R, TableHachage* H, double x, double y)
     Noeud *noeud;
 
     /*CAS OU LA CASE EST VIDE*/
-    if (currcellnoeud == NULL) {
+    if (!currcellnoeud) {
         R->nbNoeuds++;
         Noeud *new = creerNoeud(x, y, R->nbNoeuds);
         ajouterNoeud(R->noeuds, new);
@@ -42,27 +42,29 @@ Noeud* rechercheCreeNoeudHachage(Reseau* R, TableHachage* H, double x, double y)
         H->nbElement++;
 
         return noeud; // On retourne le nouveau noeud
+    }else{
+        CellNoeud *precCellnoeud = NULL;
+        while (currcellnoeud) {
+            if (currcellnoeud->nd->x == x && currcellnoeud->nd->y) {
+                return currcellnoeud->nd;
+            }
+            precCellnoeud = currcellnoeud;
+            currcellnoeud = currcellnoeud->suiv;
+        }
+
+        //si on est arrivé a la fin de la boucle alors le noeud n'exsite pas
+        Noeud *new = creerNoeud(x, y, ++R->nbNoeuds);
+        ajouterNoeud(R->noeuds, new);
+        CellNoeud *cellnoeud = (CellNoeud *) malloc(sizeof(CellNoeud));
+        cellnoeud->nd = noeud;
+        cellnoeud->suiv = NULL;
+        precCellnoeud->suiv = cellnoeud;
+        H->nbElement++;
+        return new;
     }
 
     //cas ou la case n'est pas vide, on parcourt la liste chainee, si on trouve le noeud on le retourne, sinon on l'ajoute a la fin de la liste
-    CellNoeud *precCellnoeud = NULL;
-    while (currcellnoeud) {
-        if (currcellnoeud->nd->x == x && currcellnoeud->nd->y) {
-            return currcellnoeud->nd;
-        }
-        precCellnoeud = currcellnoeud;
-        currcellnoeud = currcellnoeud->suiv;
-    }
 
-    //si on est arrivé a la fin de la boucle alors le noeud n'exsite pas
-    Noeud *new = creerNoeud(x, y, ++R->nbNoeuds);
-    ajouterNoeud(R->noeuds, new);
-    CellNoeud *cellnoeud = (CellNoeud *) malloc(sizeof(CellNoeud));
-    cellnoeud->nd = noeud;
-    cellnoeud->suiv = NULL;
-    precCellnoeud->suiv = cellnoeud;
-    H->nbElement++;
-    return new;
 
 }
 
@@ -77,7 +79,6 @@ Reseau* reconstitueReseauHachage(Chaines *C, int M){
         exit(EXIT_FAILURE);
     }
     for(int i=0;i<M;i++){
-        H->T[i]=(CellNoeud*)malloc(sizeof(CellNoeud*));
         H->T[i]=NULL;
     }
 

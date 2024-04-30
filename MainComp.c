@@ -53,12 +53,14 @@ int main(int argc, char** argv){
         tab[6]= (long double)(fin-debut)/CLOCKS_PER_SEC;
         fprintf(f2,"%d %Lf\n",k,tab[6]);
         for(j=0;j<5;j++){
+            C=generationAleatoire(k,nbPoint,xmax,ymax);
             debut = clock();
             Reseau * R1=reconstitueReseauHachage(C,(j+5)*5);
             fin = clock();
             tab[j]=(fin-debut)/CLOCKS_PER_SEC;
             libererReseau(R1);
         }
+        fprintf(f2,"%d %Lf\n",k,tab[6]);
     }
 
     fclose(f2);
